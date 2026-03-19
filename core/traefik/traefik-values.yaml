@@ -1,0 +1,29 @@
+service:
+  type: LoadBalancer
+  spec:
+    loadBalancerIP: 10.0.10.63
+ports:
+  web:
+    port: 8000
+    exposedPort: 80
+    protocol: TCP
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+  websecure:
+    port: 8443
+    exposedPort: 443
+    protocol: TCP
+additionalArguments:
+  - "--api.dashboard=true"
+  - "--api.insecure=true"
+  - "--log.level=INFO"
+ingressRoute:
+  dashboard:
+    enabled: false
+deployment:
+  replicas: 1
+persistence:
+  enabled: false

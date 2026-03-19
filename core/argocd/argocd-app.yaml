@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: homelab-core
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:jjee33/homelab-k3s.git
+    targetRevision: main
+    path: core
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
