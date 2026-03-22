@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vaultwarden
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    # Source 1: remote Helm chart
+    - repoURL: https://guerzon.github.io/vaultwarden
+      chart: vaultwarden
+      targetRevision: "0.35.1"          # pin a version — never use floating in ArgoCD
+      helm:
+        valueFiles:
+          - $values/apps/vaultwarden/values.yaml    # $values references Source 2
+    # Source 2: your Git repo (provides the values file)
+    - repoURL: git@github.com:jjee33/homelab-k3s.git
+      targetRevision: main
+      ref: values                        # this is the $values reference above
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vaultwarden
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

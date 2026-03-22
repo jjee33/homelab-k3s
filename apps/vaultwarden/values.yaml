@@ -1,0 +1,46 @@
+image:
+  tag: "1.35.4-alpine"
+  pullPolicy: IfNotPresent
+
+replicas: 1
+
+# Top-level config keys (not nested under vaultwarden:)
+domain: "https://vaultwarden.pantheon.it.com"
+signupsAllowed: false
+signupsVerify: "true"
+webVaultEnabled: "true"
+
+adminToken:
+  existingSecret: "vaultwarden-admin-token"
+  existingSecretKey: "token"
+
+storage:
+  data:
+    name: "vaultwarden-data"
+    size: "2Gi"
+    class: "longhorn"
+    accessMode: "ReadWriteOnce"
+    keepPvc: true
+
+service:
+  type: ClusterIP
+
+ingress:
+  enabled: true
+  class: "traefik"
+  nginxIngressAnnotations: false      # must be false — nginx annotations break Traefik
+  tls: false                          # self-signed for now; enable when cert-manager is deployed
+  hostname: "vaultwarden.pantheon.it.com"
+  path: "/"
+  pathType: "Prefix"
+  additionalAnnotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
