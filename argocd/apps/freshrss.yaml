@@ -1,0 +1,22 @@
+# Place this in homelab-k3s/argocd/apps/freshrss.yaml
+# ArgoCD watches this file and auto-syncs the Helm chart
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: freshrss
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/jjee33/homelab-k3s.git
+    targetRevision: main
+    path: apps/freshrss
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: freshrss
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

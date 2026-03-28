@@ -1,0 +1,95 @@
+# -- Global settings
+namespace: freshrss
+timezone: America/Chicago
+
+# -- FreshRSS
+freshrss:
+  image:
+    repository: freshrss/freshrss
+    tag: "1.24.3"
+    pullPolicy: IfNotPresent
+  # Feed refresh interval in minutes (cron schedule inside container)
+  cronMin: "*/15"
+  # First-run auto-install config
+  install:
+    defaultUser: admin
+    # Change this before first deploy — cannot be changed after install
+    defaultPassword: "FPSdYYIOzQddo/uMrqFqiA=="
+    apiEnabled: true
+    language: en
+    baseUrl: "https://rss.pantheon.it.com"
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  persistence:
+    storageClass: longhorn
+    size: 2Gi
+
+# -- PostgreSQL
+postgres:
+  image:
+    repository: postgres
+    tag: "16-alpine"
+    pullPolicy: IfNotPresent
+  database: freshrss
+  user: freshrss
+  # SOPS-encrypt this value before committing to Git
+  password: "X1s9fvkKlCTrOajO1evtMDQGHUZryNYw"
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+  persistence:
+    storageClass: longhorn
+    size: 2Gi
+
+# -- Full-Text RSS (fivefilters)
+# Extracts full article content from truncated/summary-only feeds
+fulltextRss:
+  enabled: true
+  image:
+    repository: heussd/fivefilters-full-text-rss
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+# -- RSSHub
+# Generates RSS feeds from sites that don't natively offer them
+rsshub:
+  enabled: true
+  image:
+    repository: diygod/rsshub
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  # Cache TTL in seconds (default 5 min)
+  cacheTtl: 300
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+# -- Traefik IngressRoute
+ingress:
+  enabled: true
+  host: rss.pantheon.it.com
+  entryPoints:
+    - websecure
+  # tls: {} uses Traefik's default cert (self-signed until ACME is configured)
+  # After cert-manager or Traefik ACME is live, add certResolver or secretName
+  tls: {}

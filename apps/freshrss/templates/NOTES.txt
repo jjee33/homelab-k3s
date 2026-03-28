@@ -1,0 +1,33 @@
+FreshRSS has been deployed to the {{ .Values.namespace }} namespace.
+
+=== Access ===
+{{- if .Values.ingress.enabled }}
+  URL: https://{{ .Values.ingress.host }}
+  (Requires DNS record pointing to Traefik LB IP 10.0.10.63)
+{{- else }}
+  kubectl port-forward svc/freshrss 8080:80 -n {{ .Values.namespace }}
+  Then open: http://localhost:8080
+{{- end }}
+
+  Default user: {{ .Values.freshrss.install.defaultUser }}
+  Default pass: (set in values.yaml — change immediately after first login)
+
+=== Companion Services ===
+{{- if .Values.fulltextRss.enabled }}
+  Full-Text RSS: http://freshrss-fulltext.{{ .Values.namespace }}.svc.cluster.local
+    Configure in FreshRSS: Settings → Reading → Content transformation
+    Proxy URL: http://freshrss-fulltext.{{ .Values.namespace }}.svc.cluster.local/makefulltextfeed.php?url=
+{{- end }}
+{{- if .Values.rsshub.enabled }}
+  RSSHub: http://freshrss-rsshub.{{ .Values.namespace }}.svc.cluster.local:1200
+    Add feeds using: http://freshrss-rsshub.{{ .Values.namespace }}.svc.cluster.local:1200/<route>?key=<ACCESS_KEY>
+    Route list: https://docs.rsshub.app/
+{{- end }}
+
+=== Security Reminders ===
+  1. Change default FreshRSS password immediately
+  2. Change default PostgreSQL password in values.yaml
+  3. Generate a real RSSHub ACCESS_KEY: openssl rand -hex 16
+  4. SOPS-encrypt secrets before committing to Git:
+     sops --encrypt --age <AGE_PUBLIC_KEY> templates/postgres-secret.yaml
+     sops --encrypt --age <AGE_PUBLIC_KEY> templates/rsshub-deployment.yaml

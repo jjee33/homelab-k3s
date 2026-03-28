@@ -1,0 +1,9 @@
+creation_rules:
+  - path_regex: .*secret.*\.yaml$
+    encrypted_regex: ^(stringData)$
+    age: >-
+      age144j6mc8rwf3krfz3u54lf6jsncjwu6dsj423ck3jasq3yhck2f7qvzm9au
+  - path_regex: .*rsshub.*\.yaml$
+    encrypted_regex: ^(stringData)$
+    age: >-
+      age144j6mc8rwf3krfz3u54lf6jsncjwu6dsj423ck3jasq3yhck2f7qvzm9au

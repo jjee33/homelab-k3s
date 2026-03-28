@@ -1,0 +1,12 @@
+apiVersion: v2
+name: freshrss
+description: FreshRSS self-hosted feed aggregator with PostgreSQL, Full-Text RSS, and RSSHub
+type: application
+version: 0.1.0
+appVersion: "1.24.3"
+keywords:
+  - rss
+  - freshrss
+  - feed-reader
+maintainers:
+  - name: jjee33
