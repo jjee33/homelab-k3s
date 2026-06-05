@@ -35,6 +35,8 @@ spec:
                 secretKeyRef:
                   name: freshrss-rsshub
                   key: ACCESS_KEY
+            - name: ALLOW_LOCALHOST
+              value: "1"
           resources:
             {{- toYaml .Values.rsshub.resources | nindent 12 }}
           livenessProbe:
