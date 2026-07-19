@@ -54,7 +54,6 @@ metadata:
   namespace: headlamp
 spec:
   type: LoadBalancer
-  loadBalancerIP: 10.0.10.64
   selector:
     app: headlamp
   ports:
