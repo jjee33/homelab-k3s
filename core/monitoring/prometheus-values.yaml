@@ -7,8 +7,9 @@ prometheus:
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
-              storage: 10Gi
+              storage: 30Gi
     retention: 15d
+    retentionSize: 24GB
   service:
     type: LoadBalancer
     loadBalancerIP: 10.0.10.61
