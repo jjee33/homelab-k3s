@@ -1,7 +1,7 @@
 service:
   type: LoadBalancer
   spec:
-    loadBalancerIP: 10.0.10.63
+    loadBalancerIP: 10.0.10.70
 ports:
   web:
     port: 8000

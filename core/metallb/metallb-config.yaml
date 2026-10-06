@@ -4,8 +4,11 @@ metadata:
   name: homelab-pool
   namespace: metallb-system
 spec:
+  # .61/.63/.64 are Proxmox LXCs (ai-brain, studio-operator, bpo-build) - never hand them out.
   addresses:
-  - 10.0.10.60-10.0.10.99
+  - 10.0.10.60/32
+  - 10.0.10.62/32
+  - 10.0.10.65-10.0.10.99
 ---
 apiVersion: metallb.io/v1beta1
 kind: L2Advertisement
